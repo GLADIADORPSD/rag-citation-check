@@ -27,6 +27,8 @@ export type CitationClaimsInput = {
   readonly sources: readonly CitationSource[];
 };
 
+export type QuoteMatchMode = 'exact' | 'normalized-whitespace';
+
 export type CitationCheckLimits = {
   readonly answerBytes: number;
   readonly sourceCount: number;
@@ -37,10 +39,12 @@ export type CitationCheckLimits = {
   readonly findingCount: number;
   readonly sourceIdCharacters: number;
   readonly quoteBytes: number;
+  readonly quoteCount: number;
 };
 
 export type CitationCheckOptions = {
   readonly limits?: Partial<CitationCheckLimits>;
+  readonly quoteMatching?: QuoteMatchMode;
 };
 
 export type CitationFindingCode =
@@ -84,6 +88,19 @@ export type CitationStatistics = {
   readonly infoCount: number;
 };
 
+export type CitationQuoteMatch =
+  | {
+      readonly path: string;
+      readonly sourceId?: string;
+      readonly ambiguous: false;
+      readonly sourceRange: TextRange;
+    }
+  | {
+      readonly path: string;
+      readonly sourceId?: string;
+      readonly ambiguous: true;
+    };
+
 export type CitationCheckReport = {
   readonly schemaVersion: '1';
   readonly outcome: 'pass' | 'fail';
@@ -98,6 +115,7 @@ export type CitationCheckReport = {
     readonly factualTruth: 'not-assessed';
   };
   readonly findings: readonly CitationFinding[];
+  readonly quoteMatches: readonly CitationQuoteMatch[];
   readonly statistics: CitationStatistics;
 };
 
@@ -111,6 +129,7 @@ export type CitationCheckInputErrorCode =
   | 'CLAIM_COUNT_LIMIT_EXCEEDED'
   | 'CITATION_COUNT_LIMIT_EXCEEDED'
   | 'QUOTE_LIMIT_EXCEEDED'
+  | 'QUOTE_COUNT_LIMIT_EXCEEDED'
   | 'FINDING_LIMIT_EXCEEDED';
 
 export type CitationCheckInputError = {

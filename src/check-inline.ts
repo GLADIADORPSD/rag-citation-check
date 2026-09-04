@@ -121,6 +121,7 @@ export const checkInlineCitations = (
         factualTruth: 'not-assessed',
       },
       findings: orderedFindings,
+      quoteMatches: [],
       statistics: {
         sourceCount: validated.value.input.sources.length,
         claimCount: 0,

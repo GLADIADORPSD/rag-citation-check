@@ -1,4 +1,4 @@
-import type { CitationCheckInputError, CitationCheckLimits } from './contracts.js';
+import type { CitationCheckInputError, CitationCheckLimits, QuoteMatchMode } from './contracts.js';
 
 export const HARD_LIMITS: Readonly<CitationCheckLimits> = Object.freeze({
   answerBytes: 128 * 1024,
@@ -10,15 +10,21 @@ export const HARD_LIMITS: Readonly<CitationCheckLimits> = Object.freeze({
   findingCount: 10_000,
   sourceIdCharacters: 64,
   quoteBytes: 64 * 1024,
+  quoteCount: 10_000,
 });
 
 export const DEFAULT_LIMITS: Readonly<CitationCheckLimits> = HARD_LIMITS;
+export const DEFAULT_QUOTE_MATCHING: QuoteMatchMode = 'exact';
 
 const LIMIT_KEYS = Object.freeze(Object.keys(HARD_LIMITS) as (keyof CitationCheckLimits)[]);
 const LIMIT_KEY_SET = new Set<string>(LIMIT_KEYS);
 
 export type ResolvedOptionsResult =
-  | { readonly kind: 'accepted'; readonly limits: Readonly<CitationCheckLimits> }
+  | {
+      readonly kind: 'accepted';
+      readonly limits: Readonly<CitationCheckLimits>;
+      readonly quoteMatching: QuoteMatchMode;
+    }
   | { readonly kind: 'rejected'; readonly error: CitationCheckInputError };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -31,7 +37,11 @@ const optionError = (message: string, path: string): ResolvedOptionsResult => ({
 
 export const resolveOptions = (options: unknown): ResolvedOptionsResult => {
   if (options === undefined) {
-    return { kind: 'accepted', limits: DEFAULT_LIMITS };
+    return {
+      kind: 'accepted',
+      limits: DEFAULT_LIMITS,
+      quoteMatching: DEFAULT_QUOTE_MATCHING,
+    };
   }
 
   if (!isRecord(options)) {
@@ -39,14 +49,30 @@ export const resolveOptions = (options: unknown): ResolvedOptionsResult => {
   }
 
   for (const key of Object.keys(options)) {
-    if (key !== 'limits') {
+    if (key !== 'limits' && key !== 'quoteMatching') {
       return optionError('Options contain an unknown property.', `$options.${key}`);
     }
   }
 
+  const quoteMatching = options['quoteMatching'];
+  if (
+    quoteMatching !== undefined &&
+    quoteMatching !== 'exact' &&
+    quoteMatching !== 'normalized-whitespace'
+  ) {
+    return optionError(
+      'Quote matching must be either exact or normalized-whitespace.',
+      '$options.quoteMatching',
+    );
+  }
+
   const configuredLimits = options['limits'];
   if (configuredLimits === undefined) {
-    return { kind: 'accepted', limits: DEFAULT_LIMITS };
+    return {
+      kind: 'accepted',
+      limits: DEFAULT_LIMITS,
+      quoteMatching: quoteMatching ?? DEFAULT_QUOTE_MATCHING,
+    };
   }
 
   if (!isRecord(configuredLimits)) {
@@ -83,7 +109,11 @@ export const resolveOptions = (options: unknown): ResolvedOptionsResult => {
     limits[key] = value;
   }
 
-  return { kind: 'accepted', limits: Object.freeze(limits) };
+  return {
+    kind: 'accepted',
+    limits: Object.freeze(limits),
+    quoteMatching: quoteMatching ?? DEFAULT_QUOTE_MATCHING,
+  };
 };
 
 export const utf8ByteLength = (value: string): number => Buffer.byteLength(value, 'utf8');

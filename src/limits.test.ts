@@ -1,11 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_LIMITS, HARD_LIMITS, resolveOptions, utf8ByteLength } from './limits.js';
+import {
+  DEFAULT_LIMITS,
+  DEFAULT_QUOTE_MATCHING,
+  HARD_LIMITS,
+  resolveOptions,
+  utf8ByteLength,
+} from './limits.js';
 
 describe('limit configuration', () => {
   it('uses immutable hard limits by default', () => {
-    expect(resolveOptions(undefined)).toEqual({ kind: 'accepted', limits: HARD_LIMITS });
+    expect(resolveOptions(undefined)).toEqual({
+      kind: 'accepted',
+      limits: HARD_LIMITS,
+      quoteMatching: 'exact',
+    });
     expect(DEFAULT_LIMITS).toBe(HARD_LIMITS);
+    expect(DEFAULT_QUOTE_MATCHING).toBe('exact');
     expect(Object.isFrozen(HARD_LIMITS)).toBe(true);
   });
 
@@ -15,16 +26,30 @@ describe('limit configuration', () => {
     expect(result).toEqual({
       kind: 'accepted',
       limits: { ...HARD_LIMITS, answerBytes: 12, sourceCount: 2 },
+      quoteMatching: 'exact',
     });
     expect(result.kind === 'accepted' && Object.isFrozen(result.limits)).toBe(true);
     expect(HARD_LIMITS.answerBytes).toBe(128 * 1024);
   });
 
   it('accepts an options object without a limits override', () => {
-    expect(resolveOptions({})).toEqual({ kind: 'accepted', limits: HARD_LIMITS });
+    expect(resolveOptions({})).toEqual({
+      kind: 'accepted',
+      limits: HARD_LIMITS,
+      quoteMatching: 'exact',
+    });
     expect(resolveOptions({ limits: undefined })).toEqual({
       kind: 'accepted',
       limits: HARD_LIMITS,
+      quoteMatching: 'exact',
+    });
+  });
+
+  it('accepts the normalized-whitespace quote matching mode', () => {
+    expect(resolveOptions({ quoteMatching: 'normalized-whitespace' })).toEqual({
+      kind: 'accepted',
+      limits: HARD_LIMITS,
+      quoteMatching: 'normalized-whitespace',
     });
   });
 
@@ -32,6 +57,7 @@ describe('limit configuration', () => {
     [null, '$options'],
     [[], '$options'],
     [{ unknown: true }, '$options.unknown'],
+    [{ quoteMatching: 'fuzzy' }, '$options.quoteMatching'],
     [{ limits: null }, '$options.limits'],
     [{ limits: [] }, '$options.limits'],
     [{ limits: { unknown: 1 } }, '$options.limits.unknown'],
