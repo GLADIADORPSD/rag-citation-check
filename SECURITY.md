@@ -23,3 +23,20 @@ timelines depend on severity and maintainer availability.
 The package is intended to validate specific, documented citation properties. It does not establish
 source authenticity, authority, semantic support, or factual truth, and it must not be used as the
 sole control for high-impact decisions.
+
+All answers, claims, citations, source IDs, quotes, source content, and options are treated as
+untrusted input. The package applies byte, count, and finding limits before or during processing;
+uses `Map` for caller-controlled identifiers; never constructs regular expressions from input; and
+does not access the network, filesystem, clock, randomness, environment variables, or models at
+runtime.
+
+The package does not sanitize prompt injection, authenticate sources, authorize tool calls, verify
+digital signatures, or protect a compromised host process. Applications remain responsible for
+those controls and for choosing limits below the hard maximum when their latency or memory budget
+requires it.
+
+## Supply chain
+
+The runtime has no dependencies. Development dependencies are locked, CI actions are pinned to
+immutable commit SHAs, and CI audits the production dependency graph. Release publication is
+intended to use npm trusted publishing and provenance rather than a long-lived repository token.

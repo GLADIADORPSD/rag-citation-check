@@ -25,8 +25,10 @@
   },
   "packageManager": "pnpm@11.19.0",
   "scripts": {
+    "benchmark": "pnpm build && node --expose-gc benchmarks/baseline.mjs",
     "build": "tsup src/index.ts --format esm,cjs --dts --clean --sourcemap",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build && pnpm package:check",
+    "boundaries:check": "node scripts/verify-boundaries.mjs",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm boundaries:check && pnpm test:coverage && pnpm build && pnpm package:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
