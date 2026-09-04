@@ -1,6 +1,7 @@
+export { checkCitationClaims } from './check-claims.js';
 export { checkInlineCitations } from './check-inline.js';
 export { parseInlineCitations } from './inline-parser.js';
-export { DEFAULT_LIMITS, HARD_LIMITS } from './limits.js';
+export { DEFAULT_LIMITS, DEFAULT_QUOTE_MATCHING, HARD_LIMITS } from './limits.js';
 
 export type {
   Assessment,
@@ -18,11 +19,13 @@ export type {
   CitationParseReport,
   CitationParseResult,
   CitationParseStatistics,
+  CitationQuoteMatch,
   CitationReference,
   CitationSource,
   CitationStatistics,
   InlineCitationInput,
   ParsedInlineCitation,
   ParsedInlineCitationGroup,
+  QuoteMatchMode,
   TextRange,
 } from './contracts.js';

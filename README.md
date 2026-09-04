@@ -6,9 +6,8 @@ A small, deterministic TypeScript library for checking citation contracts in RAG
 without calling another LLM.
 
 > [!IMPORTANT]
-> The project is under pre-release development and is not published to npm yet. Inline citation
-> parsing and checking are implemented. Structured claims and quote matching are not implemented
-> yet.
+> The project is under pre-release development and is not published to npm yet. Inline and
+> structured citation checks are implemented; release hardening is still in progress.
 
 ## Quickstart
 
@@ -27,6 +26,29 @@ if (result.kind === 'completed') {
 
 `verified` above means only that the parsed citation references an ID present in the supplied
 catalog. It does not establish semantic support, source trust, authority, or factual truth.
+
+Structured pipelines can also verify declared quote presence without another model call:
+
+```ts
+import { checkCitationClaims } from 'rag-citation-check';
+
+const result = checkCitationClaims({
+  claims: [
+    {
+      id: 'refund-window',
+      text: 'Refunds are available within 30 days.',
+      citationRequired: true,
+      citations: [{ sourceId: 'policy', quote: 'within 30 days' }],
+    },
+  ],
+  sources: [{ id: 'policy', content: 'Requests must be submitted within 30 days.' }],
+});
+```
+
+The default quote mode is exact. Pass `{ quoteMatching: 'normalized-whitespace' }` to normalize NFC,
+line endings, and whitespace runs. This mode remains case-, accent-, and punctuation-sensitive.
+Unique successful matches expose their original UTF-16 range in `report.quoteMatches`; ambiguous
+matches produce `QUOTE_MATCH_AMBIGUOUS` and intentionally omit a selected range.
 
 ## Inline citation grammar
 
@@ -95,9 +117,9 @@ tarball, installs it into isolated ESM and CommonJS consumers, and imports both 
 
 ## Project status
 
-The repository contains the verified package bootstrap, contract-validation foundations, and the
-inline parser/checker. Structured claims and quote matching will be added in later reviewable
-slices.
+The repository contains the verified package bootstrap, contract-validation foundations, inline
+parser/checker, and structured claim/quote checker. Release hardening, benchmarks, and the complete
+documentation pass remain before the first release candidate.
 
 Architecture decisions live in [`docs/decisions`](docs/decisions). Contributions should follow
 [`CONTRIBUTING.md`](CONTRIBUTING.md), and security reports should follow

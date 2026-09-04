@@ -142,4 +142,21 @@ describe('structured input validation', () => {
       error: { code: 'QUOTE_LIMIT_EXCEEDED', limit: 1, actual: 2 },
     });
   });
+
+  it('rejects a total quote count above the configured limit', () => {
+    expect(
+      validateClaimsInput(
+        claims([
+          claim([
+            { sourceId: '1', quote: 'first' },
+            { sourceId: '1', quote: 'second' },
+          ]),
+        ]),
+        { limits: { quoteCount: 1 } },
+      ),
+    ).toMatchObject({
+      kind: 'rejected',
+      error: { code: 'QUOTE_COUNT_LIMIT_EXCEEDED', limit: 1, actual: 2 },
+    });
+  });
 });

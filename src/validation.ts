@@ -10,6 +10,7 @@ import { limitError, resolveOptions, utf8ByteLength } from './limits.js';
 export type ValidatedInput<T> = {
   readonly input: T;
   readonly limits: Readonly<CitationCheckLimits>;
+  readonly quoteMatching: 'exact' | 'normalized-whitespace';
 };
 
 export type InputValidationResult<T> =
@@ -100,7 +101,11 @@ export const validateInlineInput = (
 
   return {
     kind: 'accepted',
-    value: { input: input as InlineCitationInput, limits: resolved.limits },
+    value: {
+      input: input as InlineCitationInput,
+      limits: resolved.limits,
+      quoteMatching: resolved.quoteMatching,
+    },
   };
 };
 
@@ -134,6 +139,7 @@ export const validateClaimsInput = (
     );
   }
 
+  let quoteCount = 0;
   for (const [claimIndex, claim] of inputClaims.entries()) {
     const claimPath = `$.claims[${String(claimIndex)}]`;
     const claimId = isRecord(claim) ? claim['id'] : undefined;
@@ -176,6 +182,18 @@ export const validateClaimsInput = (
       }
 
       if (quote !== undefined) {
+        quoteCount += 1;
+        if (quoteCount > resolved.limits.quoteCount) {
+          return reject(
+            limitError({
+              code: 'QUOTE_COUNT_LIMIT_EXCEEDED',
+              path: '$.claims',
+              limit: resolved.limits.quoteCount,
+              actual: quoteCount,
+            }),
+          );
+        }
+
         const quoteBytes = utf8ByteLength(quote);
         if (quoteBytes > resolved.limits.quoteBytes) {
           return reject(
@@ -193,6 +211,10 @@ export const validateClaimsInput = (
 
   return {
     kind: 'accepted',
-    value: { input: input as CitationClaimsInput, limits: resolved.limits },
+    value: {
+      input: input as CitationClaimsInput,
+      limits: resolved.limits,
+      quoteMatching: resolved.quoteMatching,
+    },
   };
 };
