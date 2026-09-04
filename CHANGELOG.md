@@ -16,3 +16,6 @@ begin.
 - Defensive hard limits, strict runtime input validation, and source catalog validation.
 - Explicit rejection codes for citation-count and quote-size limits.
 - Safe handling of the specification's explicit `__proto__` source ID case through `Map`.
+- Public `parseInlineCitations` and `checkInlineCitations` functions.
+- Linear inline scanner for numeric, named, and mixed citation groups with UTF-16 ranges.
+- Declared Markdown exclusions, typed syntax/reference findings, and the F01-F16 fixture corpus.
