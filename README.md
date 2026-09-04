@@ -6,8 +6,9 @@ A small, deterministic TypeScript library for checking citation contracts in RAG
 without calling another LLM.
 
 > [!IMPORTANT]
-> The project is in its bootstrap phase and is not published to npm yet. Its validation API is
-> specified but not implemented.
+> The project is under pre-release development and is not published to npm yet. Public contracts,
+> defensive limits, and source-catalog validation exist; citation parsing and the public check
+> functions are not implemented yet.
 
 ## Why this project
 
@@ -67,8 +68,8 @@ tarball, installs it into isolated ESM and CommonJS consumers, and imports both 
 
 ## Project status
 
-The current repository contains only the verified package bootstrap. Functional work will be added
-in reviewable slices after its contracts and failure corpus are approved.
+The repository contains the verified package bootstrap and the first contract-validation slice.
+Citation parsing and public check functions will be added in later reviewable slices.
 
 Architecture decisions live in [`docs/decisions`](docs/decisions). Contributions should follow
 [`CONTRIBUTING.md`](CONTRIBUTING.md), and security reports should follow
