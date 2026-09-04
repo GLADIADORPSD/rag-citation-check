@@ -31,8 +31,8 @@ citations, source identifiers, source content, quotes, and options are treated a
 - The package has zero runtime, optional, and peer dependencies.
 - Tarball contents are checked against an exact allowlist and installed into isolated ESM and
   CommonJS consumers; internal paths are confirmed to be unavailable through package exports.
-- GitHub Actions are pinned to immutable commits, workflows default to `contents: read`, dependency
-  changes are reviewed, and production dependency audits run in CI.
+- GitHub Actions are pinned to immutable commits, workflows default to `contents: read`, and the
+  complete dependency tree is audited in CI.
 - Secret-like patterns are rejected by the repository boundary check, and public files were
   reviewed for project scope and unintended private material.
 
@@ -59,7 +59,7 @@ citations, source identifiers, source content, quotes, and options are treated a
 - Literal quote presence can be misleading when evidence is out of context, unauthentic, or
   semantically unrelated. Those dimensions remain `not-assessed`.
 - Development dependencies and the CI platform remain external supply-chain components despite
-  lockfiles, immutable action pins, and automated review.
+  lockfiles, immutable action pins, and automated audits.
 
 ## Re-review triggers
 

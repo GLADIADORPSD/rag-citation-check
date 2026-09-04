@@ -38,5 +38,5 @@ requires it.
 ## Supply chain
 
 The runtime has no dependencies. Development dependencies are locked, CI actions are pinned to
-immutable commit SHAs, and CI audits the production dependency graph. Release publication is
+immutable commit SHAs, and CI audits the complete dependency tree. Release publication is
 intended to use npm trusted publishing and provenance rather than a long-lived repository token.
