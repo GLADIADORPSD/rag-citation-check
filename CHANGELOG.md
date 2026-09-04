@@ -23,3 +23,6 @@ begin.
 - Exact and normalized-whitespace quote matching with original-source ranges.
 - Explicit quote match results, ambiguity findings, unused-source diagnostics, and F17-F27 fixtures.
 - A total quote-count safety limit and typed rejection.
+- F28-F32 hardening coverage plus a seeded structured range corpus.
+- Reproducible adversarial performance baselines and runtime-boundary verification.
+- Exact tarball allowlist checks and immutable GitHub Actions pins.

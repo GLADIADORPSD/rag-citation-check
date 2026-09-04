@@ -93,4 +93,44 @@ describe('quote matcher', () => {
     expect(first).toEqual(match(`A\ud800  B`, `A\ud800 B`, 'normalized-whitespace'));
     expect(first).toMatchObject({ kind: 'matched', ambiguous: false });
   });
+
+  it('matches the documented normalization pipeline across a seeded Unicode corpus', () => {
+    let state = 0x4e46_4321;
+    const alphabet = [
+      'a',
+      'e',
+      '\u0301',
+      '\u0327',
+      '\u0344',
+      '\u1100',
+      '\u1161',
+      '\u11a8',
+      '가',
+      '\r',
+      '\n',
+      '\t',
+      '\u00a0',
+      '\ud800',
+    ];
+    const next = (): number => {
+      state = (Math.imul(state, 1_664_525) + 1_013_904_223) >>> 0;
+      return state;
+    };
+
+    for (let caseIndex = 0; caseIndex < 1_000; caseIndex += 1) {
+      let value = '';
+      const length = next() % 64;
+      for (let index = 0; index < length; index += 1) {
+        value += alphabet[next() % alphabet.length] ?? '';
+      }
+
+      const prepared = prepareQuoteSource(value, 'normalized-whitespace');
+      expect(prepared.mode).toBe('normalized-whitespace');
+      if (prepared.mode === 'normalized-whitespace') {
+        expect(prepared.value.value).toBe(value.normalize('NFC').replace(/\s+/gu, ' ').trim());
+        expect(prepared.value.originalStarts).toHaveLength(prepared.value.value.length);
+        expect(prepared.value.originalEnds).toHaveLength(prepared.value.value.length);
+      }
+    }
+  });
 });

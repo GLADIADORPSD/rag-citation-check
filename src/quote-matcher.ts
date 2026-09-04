@@ -120,6 +120,17 @@ class RangeMapBuilder {
 }
 
 const normalizeNfcWithMap = (value: string): NormalizedText => {
+  const wholeValue = value.normalize('NFC');
+  if (wholeValue === value) {
+    const originalStarts = new Uint32Array(value.length);
+    const originalEnds = new Uint32Array(value.length);
+    for (let index = 0; index < value.length; index += 1) {
+      originalStarts[index] = index;
+      originalEnds[index] = index + 1;
+    }
+    return { value, originalStarts, originalEnds };
+  }
+
   const pieces: string[] = [];
   const map = new RangeMapBuilder(value.length);
 

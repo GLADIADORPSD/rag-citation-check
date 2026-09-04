@@ -9,7 +9,12 @@ import type {
 } from './contracts.js';
 import { countFindings, sortFindings } from './findings.js';
 import { limitError } from './limits.js';
-import { matchQuote, prepareQuoteSource, type PreparedQuoteSource } from './quote-matcher.js';
+import {
+  matchQuote,
+  prepareQuoteSource,
+  type PreparedQuoteSource,
+  type QuoteMatchResult,
+} from './quote-matcher.js';
 import { buildSourceCatalog, isValidSourceId } from './source-catalog.js';
 import { validateClaimsInput } from './validation.js';
 
@@ -37,6 +42,7 @@ export const checkCitationClaims = (
   const quoteMatches: CitationQuoteMatch[] = [];
   const referencedSourceIds = new Set<string>();
   const preparedSources = new Map<string, PreparedQuoteSource>();
+  const matchCache = new Map<string, Map<string, QuoteMatchResult>>();
   let citationCount = 0;
   let coverageFailed = false;
   let quoteApplicable = false;
@@ -156,7 +162,16 @@ export const checkCitationClaims = (
         prepared = prepareQuoteSource(source.content, quoteMatching);
         preparedSources.set(source.id, prepared);
       }
-      const match = matchQuote(prepared, citation.quote);
+      let sourceMatches = matchCache.get(source.id);
+      if (sourceMatches === undefined) {
+        sourceMatches = new Map<string, QuoteMatchResult>();
+        matchCache.set(source.id, sourceMatches);
+      }
+      let match = sourceMatches.get(citation.quote);
+      if (match === undefined) {
+        match = matchQuote(prepared, citation.quote);
+        sourceMatches.set(citation.quote, match);
+      }
 
       if (match.kind === 'empty') {
         quoteFailed = true;

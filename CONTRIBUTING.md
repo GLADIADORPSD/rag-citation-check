@@ -21,6 +21,15 @@ pnpm install
 pnpm check
 ```
 
+For changes that affect parsing, normalization, limits, or output volume, also run:
+
+```bash
+pnpm benchmark
+```
+
+Document benchmark results as a local baseline, including runtime and platform. Do not present them
+as universal guarantees.
+
 Use a focused branch and open a pull request. The pull request should explain the user-visible
 contract, security implications, tests, and any documentation changes.
 
