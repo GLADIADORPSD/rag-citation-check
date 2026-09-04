@@ -18,7 +18,7 @@ export type SourceCatalogResult =
 const SOURCE_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]*$/u;
 const EXPLICIT_SAFE_IDENTIFIER_EXCEPTIONS = new Set(['__proto__']);
 
-const isValidSourceId = (id: string, maximumCharacters: number): boolean =>
+export const isValidSourceId = (id: string, maximumCharacters: number): boolean =>
   id.length > 0 &&
   id.length <= maximumCharacters &&
   (SOURCE_ID_PATTERN.test(id) || EXPLICIT_SAFE_IDENTIFIER_EXCEPTIONS.has(id));

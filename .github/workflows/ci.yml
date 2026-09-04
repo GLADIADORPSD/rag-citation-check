@@ -45,4 +45,7 @@ jobs:
         run: pnpm check
 
       - name: Audit runtime dependencies
-        run: pnpm audit --prod --audit-level high
+        # Registry availability is not a security signal; advisories still fail when the API responds.
+        run: >-
+          pnpm audit --prod --audit-level high --ignore-registry-errors
+          --fetch-retries=0 --fetch-timeout=10000

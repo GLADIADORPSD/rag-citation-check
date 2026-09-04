@@ -124,3 +124,33 @@ export type CitationCheckInputError = {
 export type CitationCheckResult =
   | { readonly kind: 'completed'; readonly report: CitationCheckReport }
   | { readonly kind: 'rejected'; readonly error: CitationCheckInputError };
+
+export type ParsedInlineCitation = {
+  readonly sourceId: string;
+  readonly answerRange: TextRange;
+};
+
+export type ParsedInlineCitationGroup = {
+  readonly answerRange: TextRange;
+  readonly citations: readonly ParsedInlineCitation[];
+};
+
+export type CitationParseStatistics = {
+  readonly groupCount: number;
+  readonly citationCount: number;
+  readonly findingCount: number;
+  readonly errorCount: number;
+  readonly warningCount: number;
+};
+
+export type CitationParseReport = {
+  readonly schemaVersion: '1';
+  readonly outcome: 'pass' | 'fail';
+  readonly groups: readonly ParsedInlineCitationGroup[];
+  readonly findings: readonly CitationFinding[];
+  readonly statistics: CitationParseStatistics;
+};
+
+export type CitationParseResult =
+  | { readonly kind: 'completed'; readonly report: CitationParseReport }
+  | { readonly kind: 'rejected'; readonly error: CitationCheckInputError };

@@ -6,9 +6,36 @@ A small, deterministic TypeScript library for checking citation contracts in RAG
 without calling another LLM.
 
 > [!IMPORTANT]
-> The project is under pre-release development and is not published to npm yet. Public contracts,
-> defensive limits, and source-catalog validation exist; citation parsing and the public check
-> functions are not implemented yet.
+> The project is under pre-release development and is not published to npm yet. Inline citation
+> parsing and checking are implemented. Structured claims and quote matching are not implemented
+> yet.
+
+## Quickstart
+
+```ts
+import { checkInlineCitations } from 'rag-citation-check';
+
+const result = checkInlineCitations({
+  answer: 'Refunds are available within 30 days [@refund-policy].',
+  sources: [{ id: 'refund-policy' }],
+});
+
+if (result.kind === 'completed') {
+  console.log(result.report.assessments.sourceReference); // "verified"
+}
+```
+
+`verified` above means only that the parsed citation references an ID present in the supplied
+catalog. It does not establish semantic support, source trust, authority, or factual truth.
+
+## Inline citation grammar
+
+The parser recognizes numeric references (`[1]`), named references (`[@doc-a]`), and groups
+(`[1, 2]`, `[@doc-a, @doc-b]`, or mixed forms). Named IDs require `@`; ordinary brackets such as
+`[draft]` are ignored.
+
+Citation-like markup inside inline code, fenced code blocks, Markdown link text, images, footnotes,
+or escaped brackets is ignored. The scanner is deliberately not a complete Markdown parser.
 
 ## Why this project
 
@@ -68,8 +95,9 @@ tarball, installs it into isolated ESM and CommonJS consumers, and imports both 
 
 ## Project status
 
-The repository contains the verified package bootstrap and the first contract-validation slice.
-Citation parsing and public check functions will be added in later reviewable slices.
+The repository contains the verified package bootstrap, contract-validation foundations, and the
+inline parser/checker. Structured claims and quote matching will be added in later reviewable
+slices.
 
 Architecture decisions live in [`docs/decisions`](docs/decisions). Contributions should follow
 [`CONTRIBUTING.md`](CONTRIBUTING.md), and security reports should follow
