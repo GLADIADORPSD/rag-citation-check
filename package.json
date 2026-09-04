@@ -1,0 +1,68 @@
+{
+  "name": "rag-citation-check",
+  "version": "0.0.0",
+  "description": "A small, deterministic TypeScript library for checking citation contracts in RAG outputs — without calling another LLM.",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --sourcemap",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build && pnpm package:check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "package:check": "node scripts/verify-package.mjs",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GLADIADORPSD/rag-citation-check.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GLADIADORPSD/rag-citation-check/issues"
+  },
+  "homepage": "https://github.com/GLADIADORPSD/rag-citation-check#readme",
+  "keywords": [
+    "ai",
+    "citation",
+    "llm",
+    "rag",
+    "typescript",
+    "validation"
+  ],
+  "author": "Pedro Duarte",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "10.9.1",
+    "globals": "17.12.0",
+    "prettier": "3.9.6",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.69.0",
+    "vitest": "4.1.11"
+  }
+}
