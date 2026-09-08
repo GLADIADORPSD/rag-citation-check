@@ -6,8 +6,8 @@ A small, deterministic TypeScript library for checking citation contracts in RAG
 without calling another LLM.
 
 > [!IMPORTANT]
-> The package is preparing its first release candidate and is not published to npm yet. Its API may
-> still change before `1.0.0`.
+> The `0.1.0-rc.1` metadata is under maintainer review and the package is not published to npm yet.
+> Its API may still change before `1.0.0`.
 
 After the first release is published:
 
@@ -237,6 +237,10 @@ or output-volume changes should also run `pnpm benchmark`.
 Architecture decisions live in [`docs/decisions`](docs/decisions). See
 [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) before proposing a
 change.
+
+The first release candidate also requires the
+[`maintainer review`](docs/maintainer-review-0.1.0.md) and
+[`release checklist`](docs/release-checklist-0.1.0.md).
 
 ## AI-assisted development
 
