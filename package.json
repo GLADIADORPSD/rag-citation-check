@@ -53,7 +53,7 @@
     "typescript",
     "validation"
   ],
-  "author": "Pedro Duarte",
+  "author": "GLADIADORPSD",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "10.0.1",
