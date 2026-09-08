@@ -8,6 +8,8 @@ begin.
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] - 2026-09-04
+
 ### Added
 
 - Initial TypeScript package bootstrap.
@@ -26,3 +28,6 @@ begin.
 - F28-F32 hardening coverage plus a seeded structured range corpus.
 - Reproducible adversarial performance baselines and runtime-boundary verification.
 - Exact tarball allowlist checks and immutable GitHub Actions pins.
+
+[Unreleased]: https://github.com/GLADIADORPSD/rag-citation-check/compare/v0.1.0-rc.1...HEAD
+[0.1.0-rc.1]: https://github.com/GLADIADORPSD/rag-citation-check/releases/tag/v0.1.0-rc.1
