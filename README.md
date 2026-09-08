@@ -246,4 +246,4 @@ Generated code is not accepted merely because it compiles or passes tests.
 
 ## License
 
-MIT © Pedro Duarte.
+MIT © GLADIADORPSD.
